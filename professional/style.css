@@ -12,6 +12,7 @@ body {
   font-size: 18px;
   line-height: 1.6;
   color: #222222;
+  background-color: #faf9f7;
 }
 
 /* ===== Links: the accent, underline only on hover ===== */
@@ -38,6 +39,8 @@ nav {
   padding: 16px 0;               /* space above/below the links inside the bar */
   margin-bottom: 45px;           /* gap before the first section */
   border-bottom: 1px solid #e5e5e5;   /* hairline that follows the bar as it sticks */
+  align-items: center;
+  
 }
 
 nav a {
@@ -52,6 +55,28 @@ nav a:hover {
   text-decoration: none;         /* override the global underline-on-hover here */
 }
 
+/* ===== Sections: consistent rhythm + spaced-caps headings ===== */
+section {
+  scroll-margin-top: 55px;   /* keep — clears the sticky nav on jumps */
+  margin-bottom: 60px;       /* even gap between sections as you scroll */
+}
+
+section h2 {
+  margin: 0 0 8px 0;              /* no space above; small gap below, before the text */
+  font-size: 19px;
+  font-weight: 700;
+  text-transform: uppercase;      /* same caps signature as the header + nav */
+  letter-spacing: 2px;
+  color: #222222;
+
+  border-left: 3px solid var(--accent);   /* short oxblood tick left of each heading */
+  padding-left: 12px;                      /* gap between that tick and the heading text */
+}
+
+section p {
+  margin: 0;
+  padding-left: 15px;    /* line the text up under the heading (3px bar + 12px padding = 15px) */
+}
 
 /* ===== Header ===== */
 header {
@@ -98,4 +123,43 @@ header .tagline {
 header .links {
   margin: 18px 0 0 0;
   font-size: 16px;
+}
+
+/* ===== CV button: one component, used in both the header and the nav ===== */
+.cv-button {
+  display: inline-block;
+  padding: 6px 14px;
+  border: 1px solid var(--accent);   /* thin oxblood outline */
+  color: var(--accent);
+  font-size: 13px;
+  text-transform: uppercase;         /* same caps as nav + headings */
+  letter-spacing: 1.5px;
+}
+.cv-button:hover {
+  background-color: var(--accent);   /* fills solid on hover... */
+  color: #ffffff;                    /* ...text flips to white */
+  text-decoration: none;
+}
+header .cv-button {
+  margin-top: 18px;                  /* breathing room above it, header only */
+}
+
+/* ===== Dark mode: applied automatically when the visitor's system is dark ===== */
+@media (prefers-color-scheme: dark) {
+  :root { --accent: #d08b7d; }                 /* lighter clay — see note */
+
+  html { background-color: #17140f; }          /* whole page, incl. side margins */
+  body { color: #e8e6e3; }                     /* soft off-white text */
+
+  header { border-bottom-color: #33302b; }
+  header .role,
+  header .contact { color: #9a948c; }
+
+  nav {
+    background-color: #17140f;                 /* must match — the sticky bar is opaque */
+    border-bottom-color: #33302b;
+  }
+  nav a { color: #cfc9c0; }
+
+  section h2 { color: #e8e6e3; }
 }
