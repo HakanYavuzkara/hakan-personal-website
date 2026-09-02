@@ -1,36 +1,71 @@
+/* ===== One accent color, defined once, used everywhere ===== */
+:root {
+  --accent: #7b2d26;   /* deep oxblood. Change THIS one value to re-tint the whole page. */
+}
+
 body {
   max-width: 760px;
   margin: 40px auto;
   padding: 0 20px;
 
-  font-family: "Times New Roman", Times, serif;   /* ← the change */
+  font-family: "Times New Roman", Times, serif;
   font-size: 18px;
   line-height: 1.6;
   color: #222222;
 }
 
-/* ===== Header: photo, name, title, links ===== */
+/* ===== Links: the accent, underline only on hover ===== */
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+/* ===== Header ===== */
 header {
-  text-align: center;          /* center everything in the header block */
-  margin-bottom: 40px;         /* gap between the header and the nav below it */
-  padding-bottom: 20px;        /* space inside, above the border line */
-  border-bottom: 1px solid #dddddd;   /* thin divider under the whole header */
+  text-align: center;
+  margin-bottom: 0;
+  padding-bottom: 30px;
+  border-bottom: 1px solid #e5e5e5;
 }
 
 header img {
   width: 150px;
   height: 150px;
-  border-radius: 50%;          /* turn the square photo into a circle */
-  object-fit: cover;           /* crop to fill the circle without squishing */
-  margin-bottom: 15px;         /* gap between photo and your name */
+  object-fit: cover;
+  margin-bottom: 20px;
 }
 
 header h1 {
-  margin: 0 0 5px 0;           /* tighten the space around your name */
-  font-size: 32px;
+  margin: 0;
+  font-size: 44px;
+  letter-spacing: -0.5px;
+  line-height: 1.1;
 }
 
-header p {
-  margin: 5px 0;               /* even, compact spacing for the title/email lines */
-  color: #555555;              /* softer grey for the supporting lines */
+header .role {
+  margin: 14px 0 0 0;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #555555;
+}
+
+header .contact {
+  margin: 10px 0 0 0;
+  font-size: 16px;
+  color: #555555;
+}
+
+header .tagline {
+  margin: 6px 0 0 0;
+  font-style: italic;
+  color: #555555;
+}
+
+header .links {
+  margin: 18px 0 0 0;
+  font-size: 16px;
 }
