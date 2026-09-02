@@ -23,6 +23,36 @@ a:hover {
   text-decoration: underline;
 }
 
+/* ===== Nav: sticky bar of section links, matching the header's caps ===== */
+nav {
+  position: sticky;              /* THE new piece: sticks to the top once you scroll to it */
+  top: 0;                        /* pins flush to the top edge of the window */
+  background-color: #ffffff;     /* opaque, so content scrolls BEHIND it, not through it */
+  z-index: 10;                   /* keeps the bar layered above the content sliding under */
+
+  display: flex;                 /* lay the links out in a row... */
+  flex-wrap: wrap;               /* ...that drops to a second line if it won't fit */
+  justify-content: center;       /* center the row, matching the header */
+  gap: 8px 22px;                 /* row-gap 8px, column-gap 22px between links */
+
+  padding: 16px 0;               /* space above/below the links inside the bar */
+  margin-bottom: 45px;           /* gap before the first section */
+  border-bottom: 1px solid #e5e5e5;   /* hairline that follows the bar as it sticks */
+}
+
+nav a {
+  font-size: 13px;
+  text-transform: uppercase;     /* same treatment as the header's role line */
+  letter-spacing: 1.5px;
+  color: #333333;                /* neutral by default — the nav stays quiet */
+}
+
+nav a:hover {
+  color: var(--accent);          /* oxblood appears on hover, as a highlight */
+  text-decoration: none;         /* override the global underline-on-hover here */
+}
+
+
 /* ===== Header ===== */
 header {
   text-align: center;
