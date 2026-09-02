@@ -8,3 +8,29 @@ body {
   line-height: 1.6;
   color: #222222;
 }
+
+/* ===== Header: photo, name, title, links ===== */
+header {
+  text-align: center;          /* center everything in the header block */
+  margin-bottom: 40px;         /* gap between the header and the nav below it */
+  padding-bottom: 20px;        /* space inside, above the border line */
+  border-bottom: 1px solid #dddddd;   /* thin divider under the whole header */
+}
+
+header img {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;          /* turn the square photo into a circle */
+  object-fit: cover;           /* crop to fill the circle without squishing */
+  margin-bottom: 15px;         /* gap between photo and your name */
+}
+
+header h1 {
+  margin: 0 0 5px 0;           /* tighten the space around your name */
+  font-size: 32px;
+}
+
+header p {
+  margin: 5px 0;               /* even, compact spacing for the title/email lines */
+  color: #555555;              /* softer grey for the supporting lines */
+}
