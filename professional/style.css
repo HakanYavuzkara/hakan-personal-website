@@ -144,16 +144,49 @@ header .cv-button {
   margin-top: 18px;                  /* breathing room above it, header only */
 }
 
+/* ===== Fixed corner button: portal to the personal side ===== */
+.to-personal {
+  position: absolute;          /* pinned to the WINDOW, stays put through all scrolling */
+  top: 20px;
+  right: 20px;
+  z-index: 30;              /* sits above the sticky nav (which is z-index 10) */
+
+  padding: 8px 16px;
+  background-color: #faf9f7;      /* solid, so page content never shows through it */
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+.to-personal:hover {
+  background-color: var(--accent);
+  color: #ffffff;
+  text-decoration: none;
+}
+
+/* on narrower screens, drop it to the BOTTOM corner so it clears the top nav */
+@media (max-width: 1000px) {
+  .to-personal {
+    top: auto;
+    bottom: 20px;
+  }
+}
+
 /* ===== Dark mode: applied automatically when the visitor's system is dark ===== */
 @media (prefers-color-scheme: dark) {
   :root { --accent: #d08b7d; }                 /* lighter clay — see note */
 
   html { background-color: #17140f; }          /* whole page, incl. side margins */
-  body { color: #e8e6e3; }                     /* soft off-white text */
+  body {
+    background-color: #17140f;   /* override the off-white so the column goes dark too */
+    color: #e8e6e3;
+  }                /* soft off-white text */
 
   header { border-bottom-color: #33302b; }
   header .role,
   header .contact { color: #9a948c; }
+.to-personal { background-color: #17140f; }
 
   nav {
     background-color: #17140f;                 /* must match — the sticky bar is opaque */
