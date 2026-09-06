@@ -7,7 +7,7 @@ body {
   /* PLACEHOLDER moving background: stripes drawn by CSS (no image file yet).
      WHEN REAL ART IS READY:
      Delete the repeating-linear-gradient(...) below and replace it with your tile, e.g.:
-         background-image: url('graphics/background.png');
+         background-image: url('graphics/background.png');g
      A small tile automatically repeats to fill the screen. The animation below
      will still scroll it. */
   background-image: repeating-linear-gradient(
