@@ -55,14 +55,17 @@ body {
 
 /* PLACEHOLDER folder icon — a simple shape for now; swap for your pixel art later */
 .folder-icon {
-  width: 64px;
-  height: 50px;
-  background: #d9b45a;         /* folder-yellow placeholder */
-  border-radius: 6px;
+  width: 88px;
+  height: 70px;
   display: block;
+  background-image: url('graphics_personal/folderIcon.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  image-rendering: pixelated;      /* keep your pixel art crisp when scaled */
 }
 .folder:hover .folder-icon {
-  background: #e8c877;          /* lighten on hover */
+  filter: brightness(1.15);
 }
 
 .folder-label {
@@ -147,17 +150,31 @@ body {
 
 /* the icon shape — folder vs file get different placeholder looks */
 .window-body .item .item-icon {
-  width: 52px;
-  height: 42px;
-  border-radius: 5px;
+  width: 72px;
+  height: 58px;
+  border-radius: 3px;
   display: block;
 }
 .window-body .item.folder .item-icon {
-  background: #d9b45a;         /* folder-yellow, like the desktop folders */
+  background-image: url('graphics_personal/folderIcon.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  image-rendering: pixelated;
 }
 .window-body .item.file .item-icon {
-  background: #9fd1c7;         /* a different colour for files (placeholder) */
-  border-radius: 3px;
+  background-image: url('graphics_personal/txtIcon.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  image-rendering: pixelated;
+}
+.window-body .item.image .item-icon {
+  background-image: url('graphics_personal/pngIcon.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  image-rendering: pixelated;
 }
 
 .window-body .item .item-label {
@@ -233,4 +250,12 @@ body {
 }
 .file-text a:hover {
   color: #9cc4ff;              /* lighter on hover */
+}
+
+/* image file viewer — scales the picture to fit the window */
+.image-view {
+  display: block;
+  max-width: 100%;               /* never wider than the window */
+  max-height: 55vh;              /* never taller than most of the screen */
+  margin: 0 auto;                /* center it */
 }

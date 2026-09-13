@@ -74,7 +74,8 @@
             type: 'folder', name: '2024',
             children: [
               { type: 'file', name: 'show-a.txt', text: 'A concert in 2024 — write it here.' },
-              { type: 'file', name: 'show-b.txt', text: 'Another 2024 show — write it here.' }
+              { type: 'file', name: 'show-b.txt', text: 'Another 2024 show — write it here.' },
+              { type: 'image', name: 'RoCo.png', src: 'graphics_personal/robertCovingtonPLACEHOLDER.png' }
             ]
           },
           { type: 'file', name: 'favorites.txt', text: 'All-time favorites — write here.' }
@@ -148,6 +149,8 @@
       if (item.type === 'folder') {
         path.push(index);    // go one level deeper
         render();
+      } else if (item.type === 'image') {
+        showImage(item);
       } else {
         showFile(item);      // it's a file — show its writing
       }
@@ -160,6 +163,16 @@
       body.innerHTML = '<div class="file-text"></div>';
       body.querySelector('.file-text').innerHTML = file.text;   // renders HTML, so links work
       path.push('__file__');
+    }
+
+    function showImage(image) {
+      title.textContent = image.name;
+      backBtn.style.visibility = 'visible';
+      body.innerHTML = '<img class="image-view" alt="">';
+      const img = body.querySelector('.image-view');
+      img.src = image.src;              // load the real image file
+      img.alt = image.name;
+      path.push('__file__');            // so Back returns to the folder listing
     }
 
     /* go up one level */
