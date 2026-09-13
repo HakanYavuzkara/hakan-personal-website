@@ -62,8 +62,8 @@ body {
 .btn-personal {
   width: 75px;
   height: 48px;
-  left: 123px;      /* ← adjust to your art */
-  top: 39px;        /* ← adjust */
+  left: 123px;
+  top: 39px;
   background-image: url('graphics/buttonPersonal.png');
 }
 .btn-personal:hover {
@@ -75,8 +75,8 @@ body {
 .btn-prof {
   width: 95px;
   height: 29px;
-  left: 113px;      /* ← adjust to your art */
-  top: 95px;       /* ← adjust */
+  left: 113px;
+  top: 95px;
   background-image: url('graphics/buttonProf.png');
 }
 .btn-prof:hover {

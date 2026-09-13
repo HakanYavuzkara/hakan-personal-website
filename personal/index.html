@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hakan Bora Yavuzkara</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- "Main" app, top-right -->
+  <a class="main-app" href="../index.html">
+    <span class="main-app-icon"></span>
+    <span class="main-app-label">Main</span>
+  </a>
+
+  <!-- desktop with the 3 top-level folders -->
+  <main class="desktop">
+    <button class="folder" onclick="openFolder('about', this)">
+      <span class="folder-icon"></span>
+      <span class="folder-label">About</span>
+    </button>
+    <button class="folder" onclick="openFolder('projects', this)">
+      <span class="folder-icon"></span>
+      <span class="folder-label">Projects</span>
+    </button>
+    <button class="folder" onclick="openFolder('concerts', this)">
+      <span class="folder-icon"></span>
+      <span class="folder-label">Concert Blogs</span>
+    </button>
+  </main>
+
+  <!-- THE WINDOW -->
+  <div class="window" id="folderWindow">
+    <div class="window-bar">
+      <button class="window-back" id="windowBack" onclick="goBack()" aria-label="Back">←</button>
+      <span class="window-title" id="windowTitle">Folder</span>
+      <button class="window-close" onclick="closeWindow()" aria-label="Close">×</button>
+    </div>
+    <div class="window-body" id="windowBody"></div>
+  </div>
+
+  <script>
+    const win   = document.getElementById('folderWindow');
+    const title = document.getElementById('windowTitle');
+    const body  = document.getElementById('windowBody');
+    const backBtn = document.getElementById('windowBack');
+
+    /* ===== THE CONTENT TREE (Approach A) =====
+       Every item has a "type": 'folder' or 'file'.
+       A folder has "children" (a list of more items).
+       A file has "text" (your writing).
+       To add a subfolder: just nest another {type:'folder', ...} in children. */
+    const tree = {
+      about: {
+        type: 'folder', name: 'About',
+        children: [
+          { type: 'file', name: 'about-me.txt', text: 'About me — <a href="https://www.youtube.com/watch?v=uvxkEvM81tU&list=RDuvxkEvM81tU&start_radio=1" target="_blank">I keep, I keep, I keep</a> ' },
+          { type: 'file', name: 'contact.txt',  text: 'Contact — write your contact info here.' }
+        ]
+      },
+      projects: {
+        type: 'folder', name: 'Projects',
+        children: [
+          { type: 'file', name: 'project-one.txt', text: 'Project one — describe it here.' },
+          { type: 'file', name: 'project-two.txt', text: 'Project two — describe it here.' }
+        ]
+      },
+      concerts: {
+        type: 'folder', name: 'Concert Blogs',
+        children: [
+          /* example SUBFOLDER — this is Level 2 in action */
+          {
+            type: 'folder', name: '2024',
+            children: [
+              { type: 'file', name: 'show-a.txt', text: 'A concert in 2024 — write it here.' },
+              { type: 'file', name: 'show-b.txt', text: 'Another 2024 show — write it here.' }
+            ]
+          },
+          { type: 'file', name: 'favorites.txt', text: 'All-time favorites — write here.' }
+        ]
+      }
+    };
+
+    /* "path" tracks where we are in the tree, so Back knows the way up.
+       e.g. ['concerts', 0] means: concerts folder → its 1st child (the 2024 subfolder). */
+    let path = [];
+
+    /* given the current path, walk the tree to find the folder we're inside */
+    function getCurrentFolder() {
+      let node = tree[path[0]];              // top-level folder
+      for (let i = 1; i < path.length; i++) {
+        node = node.children[path[i]];       // step into each subfolder along the path
+      }
+      return node;
+    }
+
+    /* open a TOP-LEVEL folder from the desktop */
+    function openFolder(key, clickedEl) {
+      document.querySelectorAll('.folder').forEach(f => f.classList.remove('selected'));
+      if (clickedEl) clickedEl.classList.add('selected');
+      path = [key];          // start a fresh path at this folder
+      render();
+      win.classList.add('is-open');
+    }
+
+    /* draw the current folder's contents into the window */
+    function render() {
+      const folder = getCurrentFolder();
+      title.textContent = folder.name;
+      backBtn.style.visibility = (path.length > 1) ? 'visible' : 'hidden';
+      body.innerHTML = '';
+
+      // a container that lays the tiles out in a grid
+      const grid = document.createElement('div');
+      grid.className = 'items';
+
+      folder.children.forEach((item, index) => {
+        const tile = document.createElement('button');
+        tile.className = 'item ' + item.type;          // 'item folder' or 'item file'
+
+        const icon = document.createElement('span');
+        icon.className = 'item-icon';
+
+        const label = document.createElement('span');
+        label.className = 'item-label';
+        label.textContent = item.name;
+
+        tile.appendChild(icon);
+        tile.appendChild(label);
+
+        tile.onclick = () => {
+          // highlight this tile, clear others (same as desktop folders)
+          grid.querySelectorAll('.item').forEach(t => t.classList.remove('selected'));
+          tile.classList.add('selected');
+          openItem(index);
+        };
+
+        grid.appendChild(tile);
+      });
+
+      body.appendChild(grid);
+    }
+
+    /* clicked something inside the window: a subfolder (go deeper) or a file (show text) */
+    function openItem(index) {
+      const item = getCurrentFolder().children[index];
+      if (item.type === 'folder') {
+        path.push(index);    // go one level deeper
+        render();
+      } else {
+        showFile(item);      // it's a file — show its writing
+      }
+    }
+
+    /* show a file's text in the window body */
+    function showFile(file) {
+      title.textContent = file.name;
+      backBtn.style.visibility = 'visible';
+      body.innerHTML = '<div class="file-text"></div>';
+      body.querySelector('.file-text').innerHTML = file.text;   // renders HTML, so links work
+      path.push('__file__');
+    }
+
+    /* go up one level */
+    function goBack() {
+      path.pop();            // drop the last step
+      render();
+    }
+
+    function closeWindow() {
+      win.classList.remove('is-open');
+      path = [];
+      document.querySelectorAll('.folder').forEach(f => f.classList.remove('selected'));
+    }
+  </script>
+
+</body>
+</html>
