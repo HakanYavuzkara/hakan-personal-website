@@ -1,53 +1,66 @@
+/* ===== reset ===== */
 body {
   margin: 0;
   min-height: 100vh;
-  font-family: sans-serif;
-  text-align: center;
-
-  /* PLACEHOLDER moving background: stripes drawn by CSS (no image file yet).
-     WHEN REAL ART IS READY:
-     Delete the repeating-linear-gradient(...) below and replace it with your tile, e.g.:
-         background-image: url('graphics/background.png');g
-     A small tile automatically repeats to fill the screen. The animation below
-     will still scroll it. */
-  background-image: repeating-linear-gradient(
-    90deg,
-    #dcdcdc 0px,
-    #dcdcdc 20px,
-    #f0f0f0 20px,
-    #f0f0f0 40px
-  );
-  animation: scroll-bg 4s linear infinite;
+  overflow: hidden;   /* full-screen background, no scrollbars */
 }
 
-/* the motion: slide the background sideways by one stripe-pair (40px) */
-/* ▼ WHEN USING A REAL TILE: change the 40px in BOTH places below to tile's
-   width in pixels. */
-@keyframes scroll-bg {
-  from { background-position: 0 0; }
-  to   { background-position: 40px 0; }
+/* ===== cycling background: 4 frames, snapping (not blending) ===== */
+.bg {
+  position: fixed;          /* fill the whole window, behind everything */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;              /* sits behind the buttons */
+
+  background-size: cover;             /* fill screen, no dead space */
+  background-position: center;
+  image-rendering: pixelated;         /* keep pixel art crisp when scaled up */
+
+  animation: cycle-frames 1s steps(1) infinite;   /* ← speed = the 1s; see note */
 }
 
-/* turn the two plain links into placeholder buttons */
-/* ▼ WHEN YOUR REAL BUTTONS ARE READY:
-   These two links will get their real looks — the pixel style for Personal,
-   the clean style for Professional. We'll target them individually then
-   (e.g. a separate rule for each button) instead of styling both the same. */
-a {
-  display: inline-block;
-  margin: 10px;
-  padding: 15px 30px;
-  background-color: #ffffff;
-  border: 2px solid #333333;
-  border-radius: 6px;
-  color: #333333;
-  text-decoration: none;
-  font-size: 18px;
+/* swap the image at 4 evenly-spaced points across the loop */
+@keyframes cycle-frames {
+  0%   { background-image: url('graphics/BackgroundFrame1.png'); }
+  25%  { background-image: url('graphics/BackgroundFrame2.png'); }
+  50%  { background-image: url('graphics/BackgroundFrame3.png'); }
+  75%  { background-image: url('graphics/BackgroundFrame4.png'); }
 }
 
-/* hover state: applies ONLY while the cursor is over a button */
-a:hover {
-  background-color: #333333;
-  color: #ffffff;
+/* ===== the two stacked pixel buttons ===== */
+.btn-personal,
+.btn-prof {
+  position: absolute;        /* you'll place them by coordinates */
+  left: 50%;
+  transform: translateX(-50%);   /* center horizontally on that point */
+
+  width: 200px;              /* ← set to your button art's size */
+  height: 80px;
+
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  image-rendering: pixelated;
+}
+
+/* Personal — placed higher up */
+.btn-personal {
+  top: 200px;                /* ← adjust this coordinate */
+  background-image: url('graphics/buttonPersonal.png');
+}
+.btn-personal:hover {
+  background-image: url('graphics/buttonPersonalHover.png');
+  cursor: pointer;
+}
+
+/* Professional — placed below Personal */
+.btn-prof {
+  top: 300px;                /* ← adjust this coordinate */
+  background-image: url('graphics/buttonProf.png');
+}
+.btn-prof:hover {
+  background-image: url('graphics/buttonProfHover.png');
   cursor: pointer;
 }
