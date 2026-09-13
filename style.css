@@ -1,27 +1,30 @@
-/* ===== reset ===== */
 body {
   margin: 0;
   min-height: 100vh;
-  overflow: hidden;   /* full-screen background, no scrollbars */
+  overflow: hidden;
+  background: #000;               /* fills any leftover edges around the stage */
 }
 
-/* ===== cycling background: 4 frames, snapping (not blending) ===== */
-.bg {
-  position: fixed;          /* fill the whole window, behind everything */
+/* THE STAGE: exact pixel size of your background art.
+   Everything inside uses your art's pixel coordinates. */
+.stage {
+  position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1;              /* sits behind the buttons */
-
-  background-size: cover;             /* fill screen, no dead space */
-  background-position: center;
-  image-rendering: pixelated;         /* keep pixel art crisp when scaled up */
-
-  animation: cycle-frames 1s steps(1) infinite;   /* ← speed = the 1s; see note */
+  width: 320px;                   /* ← your background's EXACT pixel width */
+  height: 180px;                  /* ← your background's EXACT pixel height */
+  transform-origin: top left;
+  /* the scaling is set by JS below so it always fills the screen */
 }
 
-/* swap the image at 4 evenly-spaced points across the loop */
+/* background fills the stage exactly (no cover/stretch math needed now) */
+.bg {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  image-rendering: pixelated;
+  animation: cycle-frames 1s steps(1) infinite;
+}
 @keyframes cycle-frames {
   0%   { background-image: url('graphics/BackgroundFrame1.png'); }
   25%  { background-image: url('graphics/BackgroundFrame2.png'); }
@@ -29,25 +32,20 @@ body {
   75%  { background-image: url('graphics/BackgroundFrame4.png'); }
 }
 
-/* ===== the two stacked pixel buttons ===== */
+/* buttons positioned in YOUR ART'S pixel coordinates */
 .btn-personal,
 .btn-prof {
-  position: absolute;        /* you'll place them by coordinates */
-  left: 50%;
-  transform: translateX(-50%);   /* center horizontally on that point */
-
-  width: 200px;              /* ← set to your button art's size */
-  height: 80px;
-
+  position: absolute;
+  image-rendering: pixelated;
   background-size: contain;
   background-repeat: no-repeat;
-  background-position: center;
-  image-rendering: pixelated;
 }
 
-/* Personal — placed higher up */
 .btn-personal {
-  top: 200px;                /* ← adjust this coordinate */
+  left: 120px;   /* ← the exact pixel x in your art where the button goes */
+  top: 60px;     /* ← exact pixel y */
+  width: 80px;   /* ← button art's exact pixel width */
+  height: 20px;  /* ← button art's exact pixel height */
   background-image: url('graphics/buttonPersonal.png');
 }
 .btn-personal:hover {
@@ -55,9 +53,11 @@ body {
   cursor: pointer;
 }
 
-/* Professional — placed below Personal */
 .btn-prof {
-  top: 300px;                /* ← adjust this coordinate */
+  left: 120px;
+  top: 100px;
+  width: 80px;
+  height: 20px;
   background-image: url('graphics/buttonProf.png');
 }
 .btn-prof:hover {
