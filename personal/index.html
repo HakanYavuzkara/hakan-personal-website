@@ -8,6 +8,9 @@
 </head>
 <body>
 
+  <!-- canvas for the particle animation, layered over the background -->
+  <canvas id="particleCanvas"></canvas>
+
   <!-- "Main" app, top-right -->
   <a class="main-app" href="../index.html">
     <span class="main-app-icon"></span>
@@ -89,11 +92,27 @@
 
     /* given the current path, walk the tree to find the folder we're inside */
     function getCurrentFolder() {
-      let node = tree[path[0]];              // top-level folder
+      let node = tree[path[0]];
       for (let i = 1; i < path.length; i++) {
-        node = node.children[path[i]];       // step into each subfolder along the path
+        const next = node.children[path[i]];
+        if (!next || next.type !== 'folder') break;   // stop at a file; stay in its folder
+        node = next;
       }
       return node;
+    }
+        /* build a readable breadcrumb path from the current location */
+    function buildPath() {
+      const parts = [];
+      let node = tree[path[0]];
+      parts.push(node.name);                 // top-level folder name
+
+      for (let i = 1; i < path.length; i++) {
+        const step = path[i];
+        if (step === '__file__') break;      // the file marker isn't a real name
+        node = node.children[step];
+        parts.push(node.name);               // each subfolder / file name
+      }
+      return parts.join(' / ');              // join with slashes
     }
 
     /* open a TOP-LEVEL folder from the desktop */
@@ -108,7 +127,7 @@
     /* draw the current folder's contents into the window */
     function render() {
       const folder = getCurrentFolder();
-      title.textContent = folder.name;
+      title.textContent = buildPath();
       backBtn.style.visibility = (path.length > 1) ? 'visible' : 'hidden';
       body.innerHTML = '';
 
@@ -158,21 +177,21 @@
 
     /* show a file's text in the window body */
     function showFile(file) {
-      title.textContent = file.name;
       backBtn.style.visibility = 'visible';
       body.innerHTML = '<div class="file-text"></div>';
-      body.querySelector('.file-text').innerHTML = file.text;   // renders HTML, so links work
-      path.push('__file__');
+      body.querySelector('.file-text').innerHTML = file.text;
+      path.push(getCurrentFolder().children.indexOf(file));  // record which file
+      title.textContent = buildPath();
     }
 
     function showImage(image) {
-      title.textContent = image.name;
       backBtn.style.visibility = 'visible';
       body.innerHTML = '<img class="image-view" alt="">';
       const img = body.querySelector('.image-view');
-      img.src = image.src;              // load the real image file
+      img.src = image.src;
       img.alt = image.name;
-      path.push('__file__');            // so Back returns to the folder listing
+      path.push(getCurrentFolder().children.indexOf(image));  // record which file
+      title.textContent = buildPath();
     }
 
     /* go up one level */
@@ -187,6 +206,102 @@
       document.querySelectorAll('.folder').forEach(f => f.classList.remove('selected'));
     }
   </script>
+
+
+<script>
+  // ===== PARTICLE — Stage 2: accelerating, with a speed-linked trail =====
+
+  const canvas = document.getElementById('particleCanvas');
+  const ctx = canvas.getContext('2d');
+
+  function sizeCanvas() {
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  sizeCanvas();
+  window.addEventListener('resize', sizeCanvas);
+
+  const oval = {
+    centerX: 0.50,   // horizontal center (0.5 = middle of screen)
+    centerY: 0.529,   // vertical center
+    radiusX: 0.328,   // half-width of the oval
+    radiusY: 0.358    // half-height of the oval
+  };
+
+  let angle = 0;
+
+  // ===== SPEED: starts slow, climbs to a max, then holds =====
+  let speed = 0.004;              // starting speed (slow)
+  const maxSpeed = 0.1;         // top speed it builds up to
+  const acceleration = 0.00004;   // how much speed is added each frame (tiny = slow build)
+
+  const trail = [];
+  const maxTrail = 25;   // how many past points to keep (more = longer trail)
+
+  function draw() {
+    // fully clear — canvas goes transparent, so your CSS background shows through
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    const cx = oval.centerX * canvas.width;
+    const cy = oval.centerY * canvas.height;
+    const rx = oval.radiusX * canvas.width;
+    const ry = oval.radiusY * canvas.height;
+
+    const x = cx + Math.cos(angle) * rx;
+    const y = cy + Math.sin(angle) * ry;
+
+    const floorGlowRadius = 130;    // much bigger than the particle's glow
+    const floorGlow = ctx.createRadialGradient(x, y, 0, x, y, floorGlowRadius);
+    floorGlow.addColorStop(0,   'rgba(255, 120, 60, 0.22)');   // faint warm center
+    floorGlow.addColorStop(0.5, 'rgba(255, 106, 61, 0.08)');   // fading
+    floorGlow.addColorStop(1,   'rgba(255, 106, 61, 0)');      // transparent edge
+    ctx.beginPath();
+    ctx.arc(x, y, floorGlowRadius, 0, Math.PI * 2);
+    ctx.fillStyle = floorGlow;
+    ctx.fill();
+
+    // add current position to the front of the trail, cap its length
+    trail.unshift({ x, y });
+    if (trail.length > maxTrail) trail.pop();
+
+    // draw the trail: each older point smaller and more transparent
+    for (let i = 0; i < trail.length; i++) {
+      const p = trail[i];
+      const fade = 1 - i / trail.length;      // 1 at the head, → 0 at the tail
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 4 * fade, 0, Math.PI * 2);   // shrinks toward the tail
+      ctx.fillStyle = 'rgba(255, 106, 61, ' + (fade * 0.5) + ')';  // fades toward the tail
+      ctx.fill();
+    }
+
+    // the glowing particle head
+    const glowRadius = 40;
+    const glow = ctx.createRadialGradient(x, y, 0, x, y, glowRadius);
+    glow.addColorStop(0,   'rgba(255, 120, 70, 0.9)');
+    glow.addColorStop(0.4, 'rgba(255, 106, 61, 0.4)');
+    glow.addColorStop(1,   'rgba(255, 106, 61, 0)');
+    ctx.beginPath();
+    ctx.arc(x, y, glowRadius, 0, Math.PI * 2);
+    ctx.fillStyle = glow;
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(x, y, 5, 0, Math.PI * 2);
+    ctx.fillStyle = '#ff6a3d';
+    ctx.fill();
+
+    // advance + accelerate
+    angle += speed;
+    if (speed < maxSpeed) {
+      speed += acceleration;
+      if (speed > maxSpeed) speed = maxSpeed;
+    }
+
+    requestAnimationFrame(draw);
+  }
+
+  draw();
+</script>
 
 </body>
 </html>
