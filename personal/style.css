@@ -171,9 +171,11 @@ body {
   gap: 6px;
   font-family: inherit;
   color: #e8e6f2;
-  width: 88px;
+  width: auto;
+  min-width: 80px;     /* short names still get a reasonable tile */
+  max-width: 110px;    /* long names wrap instead of growing forever */
   padding: 6px;
-  border-radius: 6px;
+  border-radius: 2px;
 }
 .window-body .item .item-icon {
   width: 72px;

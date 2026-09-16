@@ -58,30 +58,45 @@
       about: {
         type: 'folder', name: 'About',
         children: [
-          { type: 'file', name: 'about-me.txt', text: 'About me — <a href="https://www.youtube.com/watch?v=uvxkEvM81tU&list=RDuvxkEvM81tU&start_radio=1" target="_blank">I keep, I keep, I keep</a> ' },
-          { type: 'file', name: 'contact.txt',  text: 'Contact — write your contact info here.' }
+          { type: 'file', name: 'Who.txt', text: 'I am Hakan. I love physics, computers, music, films, bullet chess, fantasy basketball, and conference food. I plan to become a physics researcher/professor.' },
+          { type: 'file', name: 'JudgeMyTaste.txt',  text: '<a href="https://letterboxd.com/HakanBeWatchin/" target="_blank">Letterboxd</a><br><a href="https://rateyourmusic.com/~HakanBeListenin" target="_blank">RateYourMusic</a><br>Feel free to send recommendations or your disapproval through <a href="mailto:hayavuzkara@davidson.edu">hayavuzkara@davidson.edu</a>' },
+          { type: 'file', name: 'Credits.txt', text: 'All pixel art by me using LibreSprite. All ideas, design, and writings by me. 95% of HTML/CSS/JavaScript code by Claude Opus 5. Find this project on <a href="https://github.com/HakanYavuzkara/hakan-personal-website" target="_blank">GitHub</a>.' },
+
         ]
       },
       projects: {
         type: 'folder', name: 'Projects',
         children: [
-          { type: 'file', name: 'project-one.txt', text: 'Project one — describe it here.' },
-          { type: 'file', name: 'project-two.txt', text: 'Project two — describe it here.' }
+          { type: 'file', name: 'FantasyBball.txt', text: 'I answered the question of who would be the most valuable players across eras if 9-cat Fantasy Basketball existed every season after the 3-point line was added. I took into account z-scores for all 9 categories for every player in each season to determine the most valuable 9-cat players with respect to the seasons they played in. Coded strictly in Mathematica. Can be found <a href="https://community.wolfram.com/t/nba-player-ranking-in-fantasy-basketball-9-cat-mode-mean-category-scores-and-z-score/25387" target="_blank">here</a>.<br>I should fix the ft% and fg% evaluation soon to take into account the volume since I forgot to do it the first time. Current estimate has the greatest fantasy basketball season by a player using total z-score across all statistical categories as 2019 James Harden, which is not surprising to me.' },
+          { type: 'file', name: 'ChessEras.txt', text: 'I tried to find the most dominant runs in chess by using the Chess.com database to find highest W/D/L scores for early-modern eras of chess. This project was not as successful as I wanted it to be due to lack of an elo-based system causing heavy noise. While a 6W/6D record against super GMs demonstrates significant dominance, a player who went 9W/1D against IMs in the same year gets a higher score. The elo based calculation requires significantly more expensive computation, and my computer could not handle years past 1945 when the number of games each year increased significantly. Feel free to borrow from my project <a href="https://community.wolfram.com/t/chess-scorelines-w-d-l-of-top-players-during-the-early-modern-eras-1851-1945/25500" target="_blank">here</a> and do these yourself :). Coded strictly in Mathematica. If I decide to do this again, I will probably code it in Julia, since it should offer better data optimization and faster numerical computations for such task.' },
+          { type: 'file', name: 'HSfilms.txt', text: 'A few films I did in high school, in order of how much I like them:<br><a href="https://www.youtube.com/watch?v=rSAwmJ9Iphs" target="_blank">Quick Draw Samurai</a><br><a href="https://www.youtube.com/watch?v=5WTVq00L60w" target="_blank">Punica Granatum</a><br><a href="https://www.youtube.com/watch?v=TujKXYURNSA" target="_blank">A Quick Game</a>' }
         ]
       },
       concerts: {
         type: 'folder', name: 'Concert Blogs',
         children: [
-          /* example SUBFOLDER — this is Level 2 in action */
           {
-            type: 'folder', name: '2024',
+            type: 'folder', name: 'Ghais Guevara',
             children: [
-              { type: 'file', name: 'show-a.txt', text: 'A concert in 2024 — write it here.' },
-              { type: 'file', name: 'show-b.txt', text: 'Another 2024 show — write it here.' },
-              { type: 'image', name: 'RoCo.png', src: 'graphics_personal/robertCovingtonPLACEHOLDER.png' }
+              { type: 'file', name: 'GGblog.txt', text: 'Charlotte: July 30, 2026<br>I had a really nice time at this concert being able to speak with Ghais since he was there an hour before the start time (very rare for artits!). I particularly enjoyed Cavalier\'s opening act, and how engaged he was with the audience. While Ghais\'s energy was great and he did not miss a bar the entire show, the crowd was not as energetic that is partially due to Ghais deciding to stick to his later catalog rather than his two most popular albums. Still, I had a great time and small venues are often more fun.' },
+              { type: 'image', name: 'GGphoto.jpg', src: 'graphics_personal/concerts/GGphoto.JPG' },
             ]
           },
-          { type: 'file', name: 'favorites.txt', text: 'All-time favorites — write here.' }
+          {
+            type: 'folder', name: 'Machine Girl',
+            children: [
+              { type: 'file', name: 'MGblog.txt', text: 'Charlotte: March 6, 2026<br>Definitely top 3 concert I have been to. I knew and actively listened to both opening acts of LustSickPuppy and Show Me The Body, so I had an excellent time far before Machine Girl took stage. After they took stage, their energy, crowd engagement, tracklist choices and pacing were all excellent. Machine Girl decided to stick with their more Digital Hardcore style later discography rather than the Hardcore Breaks electronic music style they have been known for, which really helped the vocals shine and crowd energy flow.' },
+              { type: 'image', name: 'MGphoto1.jpg', src: 'graphics_personal/concerts/MGphoto1.JPG' },
+              { type: 'image', name: 'MGphoto2.jpg', src: 'graphics_personal/concerts/MGphoto2.JPG' },
+            ]
+          },
+          {
+            type: 'folder', name: 'black midi',
+            children: [
+              { type: 'file', name: 'BMblog.txt', text: 'Istanbul: May 31, 2022<br>This concert happened far before this blog became a thing, but still many years later it is the main inspiration for me to start this blog in order to not forget about the concerts I have been to. black midi was the best modern rock band despite its really short existence, and all of the band members solo careers are all worth checking out. This concert showed me that a collection of creative musicians, when on the same wavelength all of the time, and brave enough to experiment even live can create something so special and unique. black midi never played their songs the way they are on streaming, and always messed with the style of singing, tempo throughout the song, very jazzy improvisation sections, and even sneaking in Britney Spear\'s famous Toxic guitar riff seamlessly in a song in the midde of a breakdown. I am so grateful I got to see black midi before their breakup. I completely forgot to took any pictures during this concert.' },
+            ]
+          },
+
         ]
       }
     };
