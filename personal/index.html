@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hakan Bora Yavuzkara</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- canvas for the particle animation, layered over the background -->
+  <canvas id="particleCanvas"></canvas>
+
+  <!-- "Main" app, top-right -->
+  <a class="main-app" href="../index.html">
+    <span class="main-app-icon"></span>
+    <span class="main-app-label">Main</span>
+  </a>
+
+  <!-- desktop with the 3 top-level folders -->
+  <main class="desktop">
+    <button class="folder" onclick="openFolder('about', this)">
+      <span class="folder-icon"></span>
+      <span class="folder-label">About</span>
+    </button>
+    <button class="folder" onclick="openFolder('projects', this)">
+      <span class="folder-icon"></span>
+      <span class="folder-label">Projects</span>
+    </button>
+    <button class="folder" onclick="openFolder('concerts', this)">
+      <span class="folder-icon"></span>
+      <span class="folder-label">Concert Blogs</span>
+    </button>
+  </main>
+
+  <!-- THE WINDOW -->
+  <div class="window" id="folderWindow">
+    <div class="window-bar">
+      <button class="window-back" id="windowBack" onclick="goBack()" aria-label="Back">←</button>
+      <span class="window-title" id="windowTitle">Folder</span>
+      <button class="window-close" onclick="closeWindow()" aria-label="Close">×</button>
+    </div>
+    <div class="window-body" id="windowBody"></div>
+  </div>
+
+  <script>
+    const win   = document.getElementById('folderWindow');
+    const title = document.getElementById('windowTitle');
+    const body  = document.getElementById('windowBody');
+    const backBtn = document.getElementById('windowBack');
+
+    /* ===== THE CONTENT TREE (Approach A) =====
+       Every item has a "type": 'folder' or 'file'.
+       A folder has "children" (a list of more items).
+       A file has "text" (your writing).
+       To add a subfolder: just nest another {type:'folder', ...} in children. */
+    const tree = {
+      about: {
+        type: 'folder', name: 'About',
+        children: [
+          { type: 'file', name: 'Who.txt', text: 'I am Hakan. I love physics, computers, music, films, bullet chess, fantasy basketball, and conference food. I plan to become a physics researcher/professor.' },
+          { type: 'file', name: 'JudgeMyTaste.txt',  text: '<a href="https://letterboxd.com/HakanBeWatchin/" target="_blank">Letterboxd</a><br><a href="https://rateyourmusic.com/~HakanBeListenin" target="_blank">RateYourMusic</a><br>Feel free to send recommendations or your disapproval through <a href="mailto:hayavuzkara@davidson.edu">hayavuzkara@davidson.edu</a>' },
+          { type: 'file', name: 'Credits.txt', text: 'All pixel art by me using LibreSprite. All ideas, design, and writings by me. 95% of HTML/CSS/JavaScript code by Claude Opus 5. Find this project on <a href="https://github.com/HakanYavuzkara/hakan-personal-website" target="_blank">GitHub</a>.' },
+
+        ]
+      },
+      projects: {
+        type: 'folder', name: 'Projects',
+        children: [
+          { type: 'file', name: 'FantasyBball.txt', text: 'I answered the question of who would be the most valuable players across eras if 9-cat Fantasy Basketball existed every season after the 3-point line was added. I took into account z-scores for all 9 categories for every player in each season to determine the most valuable 9-cat players with respect to the seasons they played in. Coded strictly in Mathematica. Can be found <a href="https://community.wolfram.com/t/nba-player-ranking-in-fantasy-basketball-9-cat-mode-mean-category-scores-and-z-score/25387" target="_blank">here</a>.<br>I should fix the ft% and fg% evaluation soon to take into account the volume since I forgot to do it the first time. Current estimate has the greatest fantasy basketball season by a player using total z-score across all statistical categories as 2019 James Harden, which is not surprising to me.' },
+          { type: 'file', name: 'ChessEras.txt', text: 'I tried to find the most dominant runs in chess by using the Chess.com database to find highest W/D/L scores for early-modern eras of chess. This project was not as successful as I wanted it to be due to lack of an elo-based system causing heavy noise. While a 6W/6D record against super GMs demonstrates significant dominance, a player who went 9W/1D against IMs in the same year gets a higher score. The elo based calculation requires significantly more expensive computation, and my computer could not handle years past 1945 when the number of games each year increased significantly. Feel free to borrow from my project <a href="https://community.wolfram.com/t/chess-scorelines-w-d-l-of-top-players-during-the-early-modern-eras-1851-1945/25500" target="_blank">here</a> and do these yourself :). Coded strictly in Mathematica. If I decide to do this again, I will probably code it in Julia, since it should offer better data optimization and faster numerical computations for such task.' },
+          { type: 'file', name: 'HSfilms.txt', text: 'A few films I did in high school, in order of how much I like them:<br><a href="https://www.youtube.com/watch?v=rSAwmJ9Iphs" target="_blank">Quick Draw Samurai</a><br><a href="https://www.youtube.com/watch?v=5WTVq00L60w" target="_blank">Punica Granatum</a><br><a href="https://www.youtube.com/watch?v=TujKXYURNSA" target="_blank">A Quick Game</a>' }
+        ]
+      },
+      concerts: {
+        type: 'folder', name: 'Concert Blogs',
+        children: [
+          {
+            type: 'folder', name: 'Ghais Guevara',
+            children: [
+              { type: 'file', name: 'GGblog.txt', text: 'Charlotte: July 30, 2026<br>I had a really nice time at this concert being able to speak with Ghais since he was there an hour before the start time (very rare for artits!). I particularly enjoyed Cavalier\'s opening act, and how engaged he was with the audience. While Ghais\'s energy was great and he did not miss a bar the entire show, the crowd was not as energetic that is partially due to Ghais deciding to stick to his later catalog rather than his two most popular albums. Still, I had a great time and small venues are often more fun.' },
+              { type: 'image', name: 'GGphoto.jpg', src: 'graphics_personal/concerts/GGphoto.JPG' },
+            ]
+          },
+          {
+            type: 'folder', name: 'Machine Girl',
+            children: [
+              { type: 'file', name: 'MGblog.txt', text: 'Charlotte: March 6, 2026<br>Definitely top 3 concert I have been to. I knew and actively listened to both opening acts of LustSickPuppy and Show Me The Body, so I had an excellent time far before Machine Girl took stage. After they took stage, their energy, crowd engagement, tracklist choices and pacing were all excellent. Machine Girl decided to stick with their more Digital Hardcore style later discography rather than the Hardcore Breaks electronic music style they have been known for, which really helped the vocals shine and crowd energy flow.' },
+              { type: 'image', name: 'MGphoto1.jpg', src: 'graphics_personal/concerts/MGphoto1.JPG' },
+              { type: 'image', name: 'MGphoto2.jpg', src: 'graphics_personal/concerts/MGphoto2.JPG' },
+            ]
+          },
+          {
+            type: 'folder', name: 'black midi',
+            children: [
+              { type: 'file', name: 'BMblog.txt', text: 'Istanbul: May 31, 2022<br>This concert happened far before this blog became a thing, but still many years later it is the main inspiration for me to start this blog in order to not forget about the concerts I have been to. black midi was the best modern rock band despite its really short existence, and all of the band members solo careers are all worth checking out. This concert showed me that a collection of creative musicians, when on the same wavelength all of the time, and brave enough to experiment even live can create something so special and unique. black midi never played their songs the way they are on streaming, and always messed with the style of singing, tempo throughout the song, very jazzy improvisation sections, and even sneaking in Britney Spear\'s famous Toxic guitar riff seamlessly in a song in the midde of a breakdown. I am so grateful I got to see black midi before their breakup. I completely forgot to took any pictures during this concert.' },
+            ]
+          },
+
+        ]
+      }
+    };
+
+    /* "path" tracks where we are in the tree, so Back knows the way up.
+       e.g. ['concerts', 0] means: concerts folder → its 1st child (the 2024 subfolder). */
+    let path = [];
+
+    /* given the current path, walk the tree to find the folder we're inside */
+    function getCurrentFolder() {
+      let node = tree[path[0]];
+      for (let i = 1; i < path.length; i++) {
+        const next = node.children[path[i]];
+        if (!next || next.type !== 'folder') break;   // stop at a file; stay in its folder
+        node = next;
+      }
+      return node;
+    }
+        /* build a readable breadcrumb path from the current location */
+    function buildPath() {
+      const parts = [];
+      let node = tree[path[0]];
+      parts.push(node.name);                 // top-level folder name
+
+      for (let i = 1; i < path.length; i++) {
+        const step = path[i];
+        if (step === '__file__') break;      // the file marker isn't a real name
+        node = node.children[step];
+        parts.push(node.name);               // each subfolder / file name
+      }
+      return parts.join(' / ');              // join with slashes
+    }
+
+    /* open a TOP-LEVEL folder from the desktop */
+    function openFolder(key, clickedEl) {
+      document.querySelectorAll('.folder').forEach(f => f.classList.remove('selected'));
+      if (clickedEl) clickedEl.classList.add('selected');
+      path = [key];          // start a fresh path at this folder
+      render();
+      win.classList.add('is-open');
+    }
+
+    /* draw the current folder's contents into the window */
+    function render() {
+      const folder = getCurrentFolder();
+      title.textContent = buildPath();
+      backBtn.style.visibility = (path.length > 1) ? 'visible' : 'hidden';
+      body.innerHTML = '';
+
+      // a container that lays the tiles out in a grid
+      const grid = document.createElement('div');
+      grid.className = 'items';
+
+      folder.children.forEach((item, index) => {
+        const tile = document.createElement('button');
+        tile.className = 'item ' + item.type;          // 'item folder' or 'item file'
+
+        const icon = document.createElement('span');
+        icon.className = 'item-icon';
+
+        const label = document.createElement('span');
+        label.className = 'item-label';
+        label.textContent = item.name;
+
+        tile.appendChild(icon);
+        tile.appendChild(label);
+
+        tile.onclick = () => {
+          // highlight this tile, clear others (same as desktop folders)
+          grid.querySelectorAll('.item').forEach(t => t.classList.remove('selected'));
+          tile.classList.add('selected');
+          openItem(index);
+        };
+
+        grid.appendChild(tile);
+      });
+
+      body.appendChild(grid);
+    }
+
+    /* clicked something inside the window: a subfolder (go deeper) or a file (show text) */
+    function openItem(index) {
+      const item = getCurrentFolder().children[index];
+      if (item.type === 'folder') {
+        path.push(index);    // go one level deeper
+        render();
+      } else if (item.type === 'image') {
+        showImage(item);
+      } else {
+        showFile(item);      // it's a file — show its writing
+      }
+    }
+
+    /* show a file's text in the window body */
+    function showFile(file) {
+      backBtn.style.visibility = 'visible';
+      body.innerHTML = '<div class="file-text"></div>';
+      body.querySelector('.file-text').innerHTML = file.text;
+      path.push(getCurrentFolder().children.indexOf(file));  // record which file
+      title.textContent = buildPath();
+    }
+
+    function showImage(image) {
+      backBtn.style.visibility = 'visible';
+      body.innerHTML = '<img class="image-view" alt="">';
+      const img = body.querySelector('.image-view');
+      img.src = image.src;
+      img.alt = image.name;
+      path.push(getCurrentFolder().children.indexOf(image));  // record which file
+      title.textContent = buildPath();
+    }
+
+    /* go up one level */
+    function goBack() {
+      path.pop();            // drop the last step
+      render();
+    }
+
+    function closeWindow() {
+      win.classList.remove('is-open');
+      path = [];
+      document.querySelectorAll('.folder').forEach(f => f.classList.remove('selected'));
+    }
+  </script>
+
+
+<script>
+  // ===== PARTICLE — Stage 2: accelerating, with a speed-linked trail =====
+
+  const canvas = document.getElementById('particleCanvas');
+  const ctx = canvas.getContext('2d');
+
+  function sizeCanvas() {
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  sizeCanvas();
+  window.addEventListener('resize', sizeCanvas);
+
+  const oval = {
+    centerX: 0.50,   // horizontal center (0.5 = middle of screen)
+    centerY: 0.529,   // vertical center
+    radiusX: 0.328,   // half-width of the oval
+    radiusY: 0.358    // half-height of the oval
+  };
+
+  let angle = 0;
+
+  // ===== SPEED: starts slow, climbs to a max, then holds =====
+  let speed = 0.004;              // starting speed (slow)
+  const maxSpeed = 0.1;         // top speed it builds up to
+  const acceleration = 0.00004;   // how much speed is added each frame (tiny = slow build)
+
+  const trail = [];
+  const maxTrail = 25;   // how many past points to keep (more = longer trail)
+
+  function draw() {
+    // fully clear — canvas goes transparent, so your CSS background shows through
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    const cx = oval.centerX * canvas.width;
+    const cy = oval.centerY * canvas.height;
+    const rx = oval.radiusX * canvas.width;
+    const ry = oval.radiusY * canvas.height;
+
+    const x = cx + Math.cos(angle) * rx;
+    const y = cy + Math.sin(angle) * ry;
+
+    const floorGlowRadius = 130;    // much bigger than the particle's glow
+    const floorGlow = ctx.createRadialGradient(x, y, 0, x, y, floorGlowRadius);
+    floorGlow.addColorStop(0,   'rgba(255, 120, 60, 0.22)');   // faint warm center
+    floorGlow.addColorStop(0.5, 'rgba(255, 106, 61, 0.08)');   // fading
+    floorGlow.addColorStop(1,   'rgba(255, 106, 61, 0)');      // transparent edge
+    ctx.beginPath();
+    ctx.arc(x, y, floorGlowRadius, 0, Math.PI * 2);
+    ctx.fillStyle = floorGlow;
+    ctx.fill();
+
+    // add current position to the front of the trail, cap its length
+    trail.unshift({ x, y });
+    if (trail.length > maxTrail) trail.pop();
+
+    // draw the trail: each older point smaller and more transparent
+    for (let i = 0; i < trail.length; i++) {
+      const p = trail[i];
+      const fade = 1 - i / trail.length;      // 1 at the head, → 0 at the tail
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 4 * fade, 0, Math.PI * 2);   // shrinks toward the tail
+      ctx.fillStyle = 'rgba(255, 106, 61, ' + (fade * 0.5) + ')';  // fades toward the tail
+      ctx.fill();
+    }
+
+    // the glowing particle head
+    const glowRadius = 40;
+    const glow = ctx.createRadialGradient(x, y, 0, x, y, glowRadius);
+    glow.addColorStop(0,   'rgba(255, 120, 70, 0.9)');
+    glow.addColorStop(0.4, 'rgba(255, 106, 61, 0.4)');
+    glow.addColorStop(1,   'rgba(255, 106, 61, 0)');
+    ctx.beginPath();
+    ctx.arc(x, y, glowRadius, 0, Math.PI * 2);
+    ctx.fillStyle = glow;
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(x, y, 5, 0, Math.PI * 2);
+    ctx.fillStyle = '#ff6a3d';
+    ctx.fill();
+
+    // advance + accelerate
+    angle += speed;
+    if (speed < maxSpeed) {
+      speed += acceleration;
+      if (speed > maxSpeed) speed = maxSpeed;
+    }
+
+    requestAnimationFrame(draw);
+  }
+
+  draw();
+</script>
+
+</body>
+</html>

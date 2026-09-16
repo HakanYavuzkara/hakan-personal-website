@@ -7,10 +7,28 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Hakan Bora Yavuzkara</h1>
-  <p>Where do you want to go?</p>
 
-  <a href="personal/index.html">Personal</a>
-  <a href="professional/index.html">Professional</a>
+  <div class="stage">
+    <div class="bg"></div>
+    <a class="btn-personal" href="personal/index.html" aria-label="Personal"></a>
+    <a class="btn-prof" href="professional/index.html" aria-label="Professional"></a>
+  </div>
+
+  <script>
+    const stage = document.querySelector('.stage');
+    const ART_W = 320;
+    const ART_H = 180;
+
+    function fitStage() {
+      const scale = Math.min(window.innerWidth / ART_W, window.innerHeight / ART_H);
+      const left = (window.innerWidth  - ART_W * scale) / 2;
+      const top  = (window.innerHeight - ART_H * scale) / 2;
+      stage.style.transform = `translate(${left}px, ${top}px) scale(${scale})`;
+    }
+
+    window.addEventListener('resize', fitStage);
+    fitStage();
+  </script>
+
 </body>
 </html>
