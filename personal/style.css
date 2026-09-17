@@ -8,7 +8,7 @@ body {
   /* the accelerator as background */
   background-color: #14141c;
   background-image: url('graphics_personal/particleAccel.png');
-  background-size: cover;
+  background-size: 100% 100%;
   background-position: center;
   background-repeat: no-repeat;
   image-rendering: pixelated;
