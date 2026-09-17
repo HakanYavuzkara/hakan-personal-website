@@ -1,6 +1,6 @@
-/* ===== One accent color, defined once, used everywhere ===== */
+/* Background color */
 :root {
-  --accent: #7b2d26;   /* deep oxblood. Change THIS one value to re-tint the whole page. */
+  --accent: #7b2d26;
 }
 
 body {
@@ -15,7 +15,6 @@ body {
   background-color: #faf9f7;
 }
 
-/* ===== Links: the accent, underline only on hover ===== */
 a {
   color: var(--accent);
   text-decoration: none;
@@ -24,61 +23,58 @@ a:hover {
   text-decoration: underline;
 }
 
-/* ===== Nav: sticky bar of section links, matching the header's caps ===== */
 nav {
-  position: sticky;              /* THE new piece: sticks to the top once you scroll to it */
-  top: 0;                        /* pins flush to the top edge of the window */
-  background-color: #ffffff;     /* opaque, so content scrolls BEHIND it, not through it */
-  z-index: 10;                   /* keeps the bar layered above the content sliding under */
+  position: sticky;
+  top: 0;
+  background-color: #ffffff;
+  z-index: 10;
 
-  display: flex;                 /* lay the links out in a row... */
-  flex-wrap: wrap;               /* ...that drops to a second line if it won't fit */
-  justify-content: center;       /* center the row, matching the header */
-  gap: 8px 22px;                 /* row-gap 8px, column-gap 22px between links */
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 22px;
 
-  padding: 16px 0;               /* space above/below the links inside the bar */
-  margin-bottom: 45px;           /* gap before the first section */
-  border-bottom: 1px solid #e5e5e5;   /* hairline that follows the bar as it sticks */
+  padding: 16px 0;
+  margin-bottom: 45px;
+  border-bottom: 1px solid #e5e5e5;
   align-items: center;
-  
 }
 
 nav a {
   font-size: 13px;
-  text-transform: uppercase;     /* same treatment as the header's role line */
+  text-transform: uppercase;
   letter-spacing: 1.5px;
-  color: #333333;                /* neutral by default — the nav stays quiet */
+  color: #333333;
 }
 
 nav a:hover {
-  color: var(--accent);          /* oxblood appears on hover, as a highlight */
-  text-decoration: none;         /* override the global underline-on-hover here */
+  color: var(--accent);
+  text-decoration: none;
 }
 
-/* ===== Sections: consistent rhythm + spaced-caps headings ===== */
 section {
-  scroll-margin-top: 55px;   /* keep — clears the sticky nav on jumps */
-  margin-bottom: 60px;       /* even gap between sections as you scroll */
+  scroll-margin-top: 67px;
+  margin-bottom: 60px;
 }
 
 section h2 {
-  margin: 0 0 8px 0;              /* no space above; small gap below, before the text */
+  margin: 0 0 8px 0;
   font-size: 19px;
   font-weight: 700;
-  text-transform: uppercase;      /* same caps signature as the header + nav */
+  text-transform: uppercase;
   letter-spacing: 2px;
   color: #222222;
 
-  border-left: 3px solid var(--accent);   /* short oxblood tick left of each heading */
-  padding-left: 12px;                      /* gap between that tick and the heading text */
+  border-left: 3px solid var(--accent);
+  padding-left: 12px;
 }
 
 section p {
   margin: 0;
-  padding-left: 15px;    /* line the text up under the heading (3px bar + 12px padding = 15px) */
+  padding-left: 15px;
 }
 
-/* ===== Header ===== */
+/*Header*/
 header {
   text-align: center;
   margin-bottom: 0;
@@ -125,34 +121,33 @@ header .links {
   font-size: 16px;
 }
 
-/* ===== CV button: one component, used in both the header and the nav ===== */
+/*CV button,in both the header and the nav*/
 .cv-button {
   display: inline-block;
   padding: 6px 14px;
-  border: 1px solid var(--accent);   /* thin oxblood outline */
+  border: 1px solid var(--accent);
   color: var(--accent);
   font-size: 13px;
-  text-transform: uppercase;         /* same caps as nav + headings */
+  text-transform: uppercase;
   letter-spacing: 1.5px;
 }
 .cv-button:hover {
-  background-color: var(--accent);   /* fills solid on hover... */
-  color: #ffffff;                    /* ...text flips to white */
+  background-color: var(--accent);
+  color: #ffffff;
   text-decoration: none;
 }
 header .cv-button {
-  margin-top: 18px;                  /* breathing room above it, header only */
+  margin-top: 18px;
 }
 
-/* ===== Fixed corner button: portal to the personal side ===== */
 .to-personal {
-  position: absolute;          /* pinned to the WINDOW, stays put through all scrolling */
+  position: absolute;
   top: 20px;
   right: 20px;
-  z-index: 30;              /* sits above the sticky nav (which is z-index 10) */
+  z-index: 30;
 
   padding: 8px 16px;
-  background-color: #faf9f7;      /* solid, so page content never shows through it */
+  background-color: #faf9f7;
   border: 1px solid var(--accent);
   color: var(--accent);
   font-size: 13px;
@@ -165,7 +160,6 @@ header .cv-button {
   text-decoration: none;
 }
 
-/* on narrower screens, drop it to the BOTTOM corner so it clears the top nav */
 @media (max-width: 1000px) {
   .to-personal {
     top: auto;
@@ -173,15 +167,15 @@ header .cv-button {
   }
 }
 
-/* ===== Dark mode: applied automatically when the visitor's system is dark ===== */
+/*Dark mode*/
 @media (prefers-color-scheme: dark) {
-  :root { --accent: #d08b7d; }                 /* lighter clay — see note */
+  :root { --accent: #d08b7d; }
 
-  html { background-color: #17140f; }          /* whole page, incl. side margins */
+  html { background-color: #17140f; }
   body {
-    background-color: #17140f;   /* override the off-white so the column goes dark too */
+    background-color: #17140f;
     color: #e8e6e3;
-  }                /* soft off-white text */
+  }
 
   header { border-bottom-color: #33302b; }
   header .role,
@@ -189,7 +183,7 @@ header .cv-button {
 .to-personal { background-color: #17140f; }
 
   nav {
-    background-color: #17140f;                 /* must match — the sticky bar is opaque */
+    background-color: #17140f;
     border-bottom-color: #33302b;
   }
   nav a { color: #cfc9c0; }

@@ -8,16 +8,16 @@
 </head>
 <body>
 
-  <!-- canvas for the particle animation, layered over the background -->
+  <!-- canvas for particle animation -->
   <canvas id="particleCanvas"></canvas>
 
-  <!-- "Main" app, top-right -->
+  <!-- "Main" app -->
   <a class="main-app" href="../index.html">
     <span class="main-app-icon"></span>
     <span class="main-app-label">Main</span>
   </a>
 
-  <!-- desktop with the 3 top-level folders -->
+  <!-- Desktop with 3 folders -->
   <main class="desktop">
     <button class="folder" onclick="openFolder('about', this)">
       <span class="folder-icon"></span>
@@ -33,7 +33,6 @@
     </button>
   </main>
 
-  <!-- THE WINDOW -->
   <div class="window" id="folderWindow">
     <div class="window-bar">
       <button class="window-back" id="windowBack" onclick="goBack()" aria-label="Back">←</button>
@@ -44,16 +43,12 @@
   </div>
 
   <script>
-    const win   = document.getElementById('folderWindow');
+    const win = document.getElementById('folderWindow');
     const title = document.getElementById('windowTitle');
-    const body  = document.getElementById('windowBody');
+    const body = document.getElementById('windowBody');
     const backBtn = document.getElementById('windowBack');
 
-    /* ===== THE CONTENT TREE (Approach A) =====
-       Every item has a "type": 'folder' or 'file'.
-       A folder has "children" (a list of more items).
-       A file has "text" (your writing).
-       To add a subfolder: just nest another {type:'folder', ...} in children. */
+    /* Tree of contents */
     const tree = {
       about: {
         type: 'folder', name: 'About',
@@ -101,58 +96,55 @@
       }
     };
 
-    /* "path" tracks where we are in the tree, so Back knows the way up.
-       e.g. ['concerts', 0] means: concerts folder → its 1st child (the 2024 subfolder). */
     let path = [];
 
-    /* given the current path, walk the tree to find the folder we're inside */
+    /* given the current path, walk the tree to find the folder we're in */
     function getCurrentFolder() {
       let node = tree[path[0]];
       for (let i = 1; i < path.length; i++) {
         const next = node.children[path[i]];
-        if (!next || next.type !== 'folder') break;   // stop at a file; stay in its folder
+        if (!next || next.type !== 'folder') break; // stop at a file and stay in its folder
         node = next;
       }
       return node;
     }
-        /* build a readable breadcrumb path from the current location */
+    /* build a breadcrumb path from the current location */
     function buildPath() {
       const parts = [];
       let node = tree[path[0]];
-      parts.push(node.name);                 // top-level folder name
+      parts.push(node.name); // top-level folder name
 
       for (let i = 1; i < path.length; i++) {
         const step = path[i];
-        if (step === '__file__') break;      // the file marker isn't a real name
+        if (step === '__file__') break;
         node = node.children[step];
-        parts.push(node.name);               // each subfolder / file name
+        parts.push(node.name);
       }
-      return parts.join(' / ');              // join with slashes
+      return parts.join(' / ');
     }
 
-    /* open a TOP-LEVEL folder from the desktop */
+    /* open desktop folder */
     function openFolder(key, clickedEl) {
       document.querySelectorAll('.folder').forEach(f => f.classList.remove('selected'));
       if (clickedEl) clickedEl.classList.add('selected');
-      path = [key];          // start a fresh path at this folder
+      path = [key];
       render();
       win.classList.add('is-open');
     }
 
-    /* draw the current folder's contents into the window */
+    /* draw current folder's contents into window */
     function render() {
       const folder = getCurrentFolder();
       title.textContent = buildPath();
       backBtn.style.visibility = (path.length > 1) ? 'visible' : 'hidden';
       body.innerHTML = '';
 
-      // a container that lays the tiles out in a grid
       const grid = document.createElement('div');
       grid.className = 'items';
 
       folder.children.forEach((item, index) => {
         const tile = document.createElement('button');
-        tile.className = 'item ' + item.type;          // 'item folder' or 'item file'
+        tile.className = 'item ' + item.type;
 
         const icon = document.createElement('span');
         icon.className = 'item-icon';
@@ -165,7 +157,7 @@
         tile.appendChild(label);
 
         tile.onclick = () => {
-          // highlight this tile, clear others (same as desktop folders)
+          // highlight this tile, clear others
           grid.querySelectorAll('.item').forEach(t => t.classList.remove('selected'));
           tile.classList.add('selected');
           openItem(index);
@@ -177,7 +169,7 @@
       body.appendChild(grid);
     }
 
-    /* clicked something inside the window: a subfolder (go deeper) or a file (show text) */
+    /* When clicking file */
     function openItem(index) {
       const item = getCurrentFolder().children[index];
       if (item.type === 'folder') {
@@ -186,16 +178,15 @@
       } else if (item.type === 'image') {
         showImage(item);
       } else {
-        showFile(item);      // it's a file — show its writing
+        showFile(item);
       }
     }
 
-    /* show a file's text in the window body */
     function showFile(file) {
       backBtn.style.visibility = 'visible';
       body.innerHTML = '<div class="file-text"></div>';
       body.querySelector('.file-text').innerHTML = file.text;
-      path.push(getCurrentFolder().children.indexOf(file));  // record which file
+      path.push(getCurrentFolder().children.indexOf(file));
       title.textContent = buildPath();
     }
 
@@ -205,13 +196,12 @@
       const img = body.querySelector('.image-view');
       img.src = image.src;
       img.alt = image.name;
-      path.push(getCurrentFolder().children.indexOf(image));  // record which file
+      path.push(getCurrentFolder().children.indexOf(image));
       title.textContent = buildPath();
     }
 
-    /* go up one level */
     function goBack() {
-      path.pop();            // drop the last step
+      path.pop();
       render();
     }
 
@@ -224,37 +214,36 @@
 
 
 <script>
-  // ===== PARTICLE — Stage 2: accelerating, with a speed-linked trail =====
-
+  // PARTICLE ANIMATION =====
   const canvas = document.getElementById('particleCanvas');
   const ctx = canvas.getContext('2d');
 
   function sizeCanvas() {
-    canvas.width  = window.innerWidth;
+    canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
   }
   sizeCanvas();
   window.addEventListener('resize', sizeCanvas);
 
+  // Parameters for the oval path (need to change for mobile)
   const oval = {
-    centerX: 0.50,   // horizontal center (0.5 = middle of screen)
-    centerY: 0.529,   // vertical center
-    radiusX: 0.328,   // half-width of the oval
-    radiusY: 0.358    // half-height of the oval
+    centerX: 0.50,
+    centerY: 0.529,
+    radiusX: 0.328,
+    radiusY: 0.358
   };
 
   let angle = 0;
 
-  // ===== SPEED: starts slow, climbs to a max, then holds =====
-  let speed = 0.004;              // starting speed (slow)
-  const maxSpeed = 0.1;         // top speed it builds up to
-  const acceleration = 0.00004;   // how much speed is added each frame (tiny = slow build)
+  // Start slow and accelerate =====
+  let speed = 0.004;
+  const maxSpeed = 0.1;
+  const acceleration = 0.00004;
 
   const trail = [];
-  const maxTrail = 25;   // how many past points to keep (more = longer trail)
+  const maxTrail = 25;
 
   function draw() {
-    // fully clear — canvas goes transparent, so your CSS background shows through
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     const cx = oval.centerX * canvas.width;
@@ -265,36 +254,35 @@
     const x = cx + Math.cos(angle) * rx;
     const y = cy + Math.sin(angle) * ry;
 
-    const floorGlowRadius = 130;    // much bigger than the particle's glow
+    const floorGlowRadius = 130;
     const floorGlow = ctx.createRadialGradient(x, y, 0, x, y, floorGlowRadius);
-    floorGlow.addColorStop(0,   'rgba(255, 120, 60, 0.22)');   // faint warm center
+    floorGlow.addColorStop(0, 'rgba(255, 120, 60, 0.22)');   // faint warm center
     floorGlow.addColorStop(0.5, 'rgba(255, 106, 61, 0.08)');   // fading
-    floorGlow.addColorStop(1,   'rgba(255, 106, 61, 0)');      // transparent edge
+    floorGlow.addColorStop(1, 'rgba(255, 106, 61, 0)');      // transparent edge
     ctx.beginPath();
     ctx.arc(x, y, floorGlowRadius, 0, Math.PI * 2);
     ctx.fillStyle = floorGlow;
     ctx.fill();
 
-    // add current position to the front of the trail, cap its length
     trail.unshift({ x, y });
     if (trail.length > maxTrail) trail.pop();
 
     // draw the trail: each older point smaller and more transparent
     for (let i = 0; i < trail.length; i++) {
       const p = trail[i];
-      const fade = 1 - i / trail.length;      // 1 at the head, → 0 at the tail
+      const fade = 1 - i / trail.length;
       ctx.beginPath();
-      ctx.arc(p.x, p.y, 4 * fade, 0, Math.PI * 2);   // shrinks toward the tail
-      ctx.fillStyle = 'rgba(255, 106, 61, ' + (fade * 0.5) + ')';  // fades toward the tail
+      ctx.arc(p.x, p.y, 4 * fade, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(255, 106, 61, ' + (fade * 0.5) + ')';
       ctx.fill();
     }
 
     // the glowing particle head
     const glowRadius = 40;
     const glow = ctx.createRadialGradient(x, y, 0, x, y, glowRadius);
-    glow.addColorStop(0,   'rgba(255, 120, 70, 0.9)');
+    glow.addColorStop(0, 'rgba(255, 120, 70, 0.9)');
     glow.addColorStop(0.4, 'rgba(255, 106, 61, 0.4)');
-    glow.addColorStop(1,   'rgba(255, 106, 61, 0)');
+    glow.addColorStop(1, 'rgba(255, 106, 61, 0)');
     ctx.beginPath();
     ctx.arc(x, y, glowRadius, 0, Math.PI * 2);
     ctx.fillStyle = glow;
@@ -305,7 +293,6 @@
     ctx.fillStyle = '#ff6a3d';
     ctx.fill();
 
-    // advance + accelerate
     angle += speed;
     if (speed < maxSpeed) {
       speed += acceleration;
