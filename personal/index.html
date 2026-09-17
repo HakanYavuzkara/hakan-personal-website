@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <script>document.documentElement.classList.add('js');</script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Hakan Bora Yavuzkara</title>
   <link rel="canonical" href="https://hakanbora.com/personal/">
@@ -304,6 +305,10 @@
   }
 
   draw();
+
+function reveal() { document.body.classList.add('ready'); }
+window.addEventListener('load', reveal);
+setTimeout(reveal, 3000);
 </script>
 
 </body>
