@@ -167,6 +167,37 @@ header .cv-button {
   }
 }
 
+@media (hover: none) and (pointer: coarse) {
+  .to-personal {
+    top: 10px;
+    right: 10px;
+    bottom: auto;
+
+    padding: 5px 10px;
+    font-size: 11px;
+    letter-spacing: 1px;
+  }
+}
+
+@media (max-width: 600px) {
+  nav {
+    padding: 8px 0;
+    gap: 6px 14px;
+  }
+  nav a {
+    font-size: 11px;
+    letter-spacing: 0.5px;
+  }
+  .cv-button {
+    padding: 4px 10px;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+  }
+  section {
+    scroll-margin-top: 70px;
+  }
+}
+
 /*Dark mode*/
 @media (prefers-color-scheme: dark) {
   :root { --accent: #d08b7d; }
