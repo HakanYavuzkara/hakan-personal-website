@@ -14,6 +14,13 @@ html, body {
   background: #000;
 }
 
+@media (hover: none) and (pointer: coarse) {
+  html {
+    overflow-x: auto;      /* pan sideways on phones only */
+    overflow-y: hidden;
+  }
+}
+
 body {
   display: flex;
   justify-content: center;
@@ -28,14 +35,6 @@ body {
   width: 320px;
   height: 180px;
   transform-origin: top left;
-}
-
-/* if the screen is wider than tall, scale by width-fit instead */
-@media (min-aspect-ratio: 16/9) {
-  .stage { transform: scale(calc(100vh / 180)); }
-}
-@media (max-aspect-ratio: 16/9) {
-  .stage { transform: scale(calc(100vw / 320)); }
 }
 
 .bg {

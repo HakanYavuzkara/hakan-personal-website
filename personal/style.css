@@ -277,3 +277,17 @@ body {
   pointer-events: none;
   z-index: 1
 }
+
+@media (hover: none) and (pointer: coarse) {
+  .desktop {
+    justify-content: space-evenly;
+    gap: 0;                      /* space-evenly does the spacing now */
+    padding: 24px 8px;
+  }
+
+  .main-app {
+    top: auto;
+    bottom: 20px;
+    right: 20px;
+  }
+}
